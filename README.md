@@ -20,3 +20,15 @@
   - dry-run=client フラグを使用すると、実際に送信することなく、クラスターに送信されるオブジェクトを確認することができます。
 - redisのpod(imageがredis123)のマニフェスト作成
 kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
+- レプリケーションコントローラー確認
+  - kubectl get replicationController
+- レプリケーションコントローラー削除
+  - kubectl delete replicationController myapp-rc
+- レプリカセット確認
+  - kubectl get replicaset
+- レプリカセット削除
+  - kubectl delete replicaset myapp-replicaset
+- マニフェストのレプリカセットの数を変更した時更新
+  - kubectl replace -f replicaset-definition.yaml
+- コマンドでレプリカセットの数を変更したい時
+  - kubectl scale --replicas=6 replicaset-definition.yaml(kubectl scale --replicas=6 replicaset myapp-replicaset)
