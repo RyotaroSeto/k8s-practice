@@ -1,4 +1,8 @@
 # k8sコマンド
+- ヘルプ確認
+  - kubectl run --help
+- nginxのイメージpod作成
+  - kubectl run nginx --image=nginx
 - pod作成
   - kubectl create -f pod-definition.yaml (createの代わりにapplyでもOK)
 - pod確認
@@ -7,3 +11,12 @@
   - kubectl describe pod myapp-pod
 - pod削除
   - kubectl delete pod myapp-pod
+- pod確認(詳細に) nodeの配置場所などわかる
+  - kubectl get pods -o wide
+- nginxのpod作成
+  - kubectl get pods -o wide
+- redisのpod(imageがredis123)のマニフェスト確認
+  - kubectl run redis --image=redis123 --dry-run -o yaml
+  - dry-run=client フラグを使用すると、実際に送信することなく、クラスターに送信されるオブジェクトを確認することができます。
+- redisのpod(imageがredis123)のマニフェスト作成
+kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
