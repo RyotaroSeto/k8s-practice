@@ -56,3 +56,18 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
 - namespace付きpod作成
   - kubectl create -f pod-definition.yaml --namespace=dev
   - metadataの中にnamespace: devつける
+- podの中にある全てのnamespaceを見る
+  - kubectl get pods --all-namespaces(kubectl get pods -A)
+- リソース定義をYAML形式で画面上に出力します。
+  - -o yaml
+  - kubectl run nginx --image=nginx --dry-run=client -o yaml
+  - kubectl create deployment nginx --image=nginx --dry-run=client -o yaml > nginx-deployment.yaml
+- NodePort タイプの nginx という名前の Service を作成して、ノード上のポート 30080 に pod nginx のポート 80 を公開
+  - kubectl expose pod nginx --type=NodePort --port=80 --name=nginx-service --dry-run=client -o yaml
+  - kubectl create service nodeport nginx --tcp=80:80 --node-port=30080 --dry-run=client -o yaml
+- Pod Name: redis,Image: redis:alpine,Labels: tier=db
+  - kubectl run redis --image=redis:alpine --labels="tier=db"
+- service clusterip のヘルプ
+  - kubectl create service clusterip --help
+- nameがhttpd,imageがhttpd:alpine,
+  - kubectl run httpd --image=httpd:alpine --port=80 --expose=true
