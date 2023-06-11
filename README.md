@@ -32,3 +32,7 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
   - kubectl replace -f replicaset-definition.yaml
 - コマンドでレプリカセットの数を変更したい時
   - kubectl scale --replicas=6 replicaset-definition.yaml(kubectl scale --replicas=6 replicaset myapp-replicaset)
+- デプロイメント確認
+  - kubectl get deployments
+- 作成されたもの全て確認
+  - kubectl get pods
