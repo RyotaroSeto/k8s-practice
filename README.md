@@ -36,3 +36,23 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
   - kubectl get deployments
 - 作成されたもの全て確認
   - kubectl get pods
+- 特定の名前とイメージを持つポッドやデプロイメントを作成するよう求められた場合
+  - kubectl run コマンド
+- deploymentのヘルプ
+  - kubectl create deployment --help
+- deployment作成
+  - kubectl create deployment httpd-frontend --image=httpd:2.4-alpine --replicas=3
+- service
+ - NodePort
+ - ClusterIP
+ - Loadbalancer
+   - クラウドプロバイダー(awsなど)のロードバランサーを使用して、Serviceを外部に公開します。クラスター外部にあるロードバランサーが転送する先のNodePortとClusterIP Serviceは自動的に作成されます。
+ - serviceのClusterIPはKubernetesのクラスター外からはアクセスができない。serviceのNodePortを利用するとNodeの特定ポートにアクセスすれば、ClusterIPに繋げてくれる。
+- namespace表示
+  - kubectl get pods --namespace=kube-system
+- namespace作成
+  - kubectl create namespace dev
+  - kubectl apply -f namespace-definition.yaml
+- namespace付きpod作成
+  - kubectl create -f pod-definition.yaml --namespace=dev
+  - metadataの中にnamespace: devつける
