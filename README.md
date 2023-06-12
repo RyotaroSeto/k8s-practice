@@ -71,3 +71,5 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
   - kubectl create service clusterip --help
 - nameがhttpd,imageがhttpd:alpine,
   - kubectl run httpd --image=httpd:alpine --port=80 --expose=true
+- スケジューラーの有無
+  - kubectl get pods --namespace kube-system　でスケジューラが見つかる`scheduler`と書いてある。なければpodがpendingのままの状態になる
