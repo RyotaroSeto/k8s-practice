@@ -2,14 +2,14 @@ apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
   name: myapp-replicaset
-  labels:
+  labels: # こちらはレプリカセット自体のラベル 今の所あまり気にしない
     app: myapp
     type: front-end
 spec:
   template:
     metadata:
       name: myapp-pod
-      labels:
+      labels: # テンプレートセッションに定義したラベルはポッドに設定したラベル
         app: myapp
         type: front-end
     spec:

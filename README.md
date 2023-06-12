@@ -73,3 +73,11 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
   - kubectl run httpd --image=httpd:alpine --port=80 --expose=true
 - スケジューラーの有無
   - kubectl get pods --namespace kube-system　でスケジューラが見つかる`scheduler`と書いてある。なければpodがpendingのままの状態になる
+- label指定のget pods
+  - kubectl get pods --selector name=myapp
+- ヘッダー抜きで指定のラベルのpodの数を表示
+  - kubectl get pods --selector env=dev --no-headers | wc -l
+- podやreplicasetなど全てのラベルの数を表示
+  - kubectl get all --selector env=prod --no-headers | wc -l
+- 複数ラベル指定
+  - kubectl get all --selector env=prod,bu=finance,tier=frontend
