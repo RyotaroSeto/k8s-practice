@@ -81,3 +81,5 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
   - kubectl get all --selector env=prod --no-headers | wc -l
 - 複数ラベル指定
   - kubectl get all --selector env=prod,bu=finance,tier=frontend
+- アプリケーションbleuのpodにノードを専用にする key=value app=blue
+  - kubectl taint nodes node-name key=value:taint-effect

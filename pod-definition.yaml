@@ -10,3 +10,8 @@ spec:
   containers:
     - name: nginx-container
       image: nginx
+  tolerations: # podにトレランスを追加する場合　　　　　　ノードを汚染し、汚染したノードに配置できるようにするためトレランスする
+  - key: "app" # これら全てダブルコートで囲まなければならない
+    operator: "Equal"
+    value: "blue"
+    effect: "NoSchedule" # スケジュールはなし
