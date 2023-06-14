@@ -89,4 +89,11 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
   - kubectl run bee --image=nginx --dry-run=client -o yaml > bee.yaml
 - すでに指定のnodeにtaintが設定してあって削除したい場合
   - kubectl taint node controlplane node-role.kubernetes.io/control-plane:NoSchedule-  #最後がtaint名「-」をつけると削除される
-
+- nodeにlabelをつける これでpodにnodeSelectorのsizeを対象のlabel名で指定できる
+  - kubectl label nodes <node-name> <label-key>=<label-value>
+- ↑上記は複雑な場合目的を果たすことが難しい。そのためノードアフィニティ(Node Affinity)とアンチアフィニティがある
+  - Node Affinityの目的はpodが特定のノードにホストされるようにする
+    - 特定のノードへのポッド配置を制限する高度な機能
+- 指定のノードに何か配置していないか調べる。配置されていない場合はnone
+  - kubectl describe node node01 | grep Taints # Taints <none>
+  - kubectl describe node controlplane | grep Taints # Taints <none>

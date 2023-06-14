@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: size
+                operator: In
+                value:
+                - Large
+                - Medium
+                # - key: size
+                #   operator: Exists # これでも上と同様 exist演算子はラベルサイズがノード上に存在するかチェックするだけなのでvalue不要
+
+              # - key: size
+              #   operator: NotIn # これでも上と同様
+              #   value:
+              #   - Small
