@@ -83,3 +83,10 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
   - kubectl get all --selector env=prod,bu=finance,tier=frontend
 - アプリケーションbleuのpodにノードを専用にする key=value app=blue
   - kubectl taint nodes node-name key=value:taint-effect
+- imageがnginxでmosquitoという名のpod作成
+  - kubectl run mosquito --image=nginx
+- yamlに転記
+  - kubectl run bee --image=nginx --dry-run=client -o yaml > bee.yaml
+- すでに指定のnodeにtaintが設定してあって削除したい場合
+  - kubectl taint node controlplane node-role.kubernetes.io/control-plane:NoSchedule-  #最後がtaint名「-」をつけると削除される
+
