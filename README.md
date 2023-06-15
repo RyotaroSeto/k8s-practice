@@ -97,3 +97,5 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
 - 指定のノードに何か配置していないか調べる。配置されていない場合はnone
   - kubectl describe node node01 | grep Taints # Taints <none>
   - kubectl describe node controlplane | grep Taints # Taints <none>
+- 現状のpodをyamlに移してくれる
+  - kubectl get pod elephant -o yaml > elephant.yaml

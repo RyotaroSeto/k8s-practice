@@ -1,0 +1,11 @@
+# kubernetesクラスタにデプロイされたアプリケーションが消費できるリソース総量制限する
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: myapp-pod
+spec:
+  hard:
+    requests.cpu: 4
+    requests.memory: 4Gi
+    limit.cpu: 10
+    limit.memory: 10Gi
