@@ -99,3 +99,9 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
   - kubectl describe node controlplane | grep Taints # Taints <none>
 - 現状のpodをyamlに移してくれる
   - kubectl get pod elephant -o yaml > elephant.yaml
+-  指定のネームスペースにあるデーモンセットの詳細確認
+  - kubectl get daemonsets -A # deamonsetの詳細確認
+  - kubectl describe daemonsets kube-proxy -n kube-system
+- DeamonSetはデプロイメントの特殊系
+- DaemonSetのユースケースとしては各Podが出すログを収集するFluentdや、各Podのリソース使用状況やノードの状態をモニタリングするDatadogなど全Node上で必ず動作している必要のあるプロセスのために利用
+
