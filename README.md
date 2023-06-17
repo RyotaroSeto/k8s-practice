@@ -104,4 +104,10 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
   - kubectl describe daemonsets kube-proxy -n kube-system
 - DeamonSetはデプロイメントの特殊系
 - DaemonSetのユースケースとしては各Podが出すログを収集するFluentdや、各Podのリソース使用状況やノードの状態をモニタリングするDatadogなど全Node上で必ず動作している必要のあるプロセスのために利用
-
+- 静的pod定義ファイルを格納するディレクトリのパス
+  - cat /var/lib/kubelet/config.yaml
+- kube-api serverの静的podとしてdeployするのに必要なDockerイメージはどのようなものか
+  - cat /etc/kubernetes/manifests/kube-apiserver.yaml
+- busyboxイメージとsleep 1000コマンドを使用するstatic-busyboxという名前の静的ポッドを作成
+  - kubectl run static-busybox --image=busybox --restart=Never --dry-run=client -o yaml --command -- sleep 1000 > test-box.yaml
+  - cp test-box.yaml /etc/kubernetes/manifests/
