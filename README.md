@@ -115,3 +115,11 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
   - kubectl get events -o wide
 - namespaceにあるpodの詳細を見る時はnamespaceを指定する
   - kubectl describe pod kube-scheduler-controlplane -n kube-system
+- 各ノードのCPUとメモリの消費量を表示
+  - kubectl top node
+- podのパフォーマンスメトリクス
+  - kubectl top pod
+- podのログ表示
+  - kubectl logs -f event-pod
+- podの中に複数コンテナがある場合のログ表示 podの後にコンテナ名もしていする　
+  - kubectl logs -f event-pod event-simulator
