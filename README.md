@@ -111,3 +111,7 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
 - busyboxイメージとsleep 1000コマンドを使用するstatic-busyboxという名前の静的ポッドを作成
   - kubectl run static-busybox --image=busybox --restart=Never --dry-run=client -o yaml --command -- sleep 1000 > test-box.yaml
   - cp test-box.yaml /etc/kubernetes/manifests/
+- 現在のnamespaceにある全てのeventをリストアップしスケジュールされたeventを探す
+  - kubectl get events -o wide
+- namespaceにあるpodの詳細を見る時はnamespaceを指定する
+  - kubectl describe pod kube-scheduler-controlplane -n kube-system
