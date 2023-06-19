@@ -123,3 +123,9 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
   - kubectl logs -f event-pod
 - podの中に複数コンテナがある場合のログ表示 podの後にコンテナ名もしていする　
   - kubectl logs -f event-pod event-simulator
+- ロールアウトのステータス確認
+  - kubectl rollout status deployment/myapp-deployment
+- デプロイのリビジョンと履歴の確認
+  - kubectl rollout history deployment/myapp-deployment
+- デプロイメントは以前のリビジョンにロールバックすることができる
+  - kubectl rollout undo deployment/myapp-deployment
