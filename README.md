@@ -129,3 +129,17 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
   - kubectl rollout history deployment/myapp-deployment
 - デプロイメントは以前のリビジョンにロールバックすることができる
   - kubectl rollout undo deployment/myapp-deployment
+- Command line arguments: --color=greenのpod作成
+  - kubectl run webapp-green --image=kodekloud/webapp-color -- --color=green
+- コマンドラインでconfigマップ作成する方法
+  - kubectl create configmap app-config --from-literal=APP_COLOR=blue --from-literal=APP_MODE=prod
+- コンフィグマップ表示
+  - kubectl get configmaps
+- コマンドラインでsecret作成する方法
+  - kubectl create secret generic app-secret --from-literal=DB_HOST=mysql
+- base64でエンコードHash化
+  - echo -n "mysql" | base64
+- secret表示
+  - kubectl get secrets
+- 既存のsecretのyaml表示
+  - kubectl get secret app-server -o yaml
