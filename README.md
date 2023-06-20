@@ -143,3 +143,7 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
   - kubectl get secrets
 - 既存のsecretのyaml表示
   - kubectl get secret app-server -o yaml
+- 既存のpodなどを強制的に差し替え
+  - kubectl replace --force -f /tmp/kubectl-edit-2804231204.yaml
+- serviceのログ
+  - kubectl logs orange -c init-myservice
