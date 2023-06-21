@@ -147,3 +147,61 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
   - kubectl replace --force -f /tmp/kubectl-edit-2804231204.yaml
 - serviceのログ
   - kubectl logs orange -c init-myservice
+- nodeを切り離す(指定したノード上の Pod を安全に削除して,そのノードには新しく Pod をスケジューリングしないようにステータスを変更できる)
+  - kubectl drain node-1
+-  デーモンセットが載っている時切り離す場合
+  - kubectl drain node-1 --ignore-daemonsets
+- 強制的に切り離す
+  - kubectl drain node-1 --ignore-daemonsets --force
+- ノードを復帰させる
+  - kubectl uncordon node-1
+- 余分なポッドがノードに追加されるのを防ぐ.ノードが cordon された後は、新しいポッドをそのノードにスケジュールすることはできない。
+  - kubectl cordon node-2
+- kubernetesクラスタのアップグレード
+  - このクラスタでワークロードをホストできるノードの数は？
+    - kubectl describe node | grep Taints
+  - 現在のkubernetesの最新version確認
+    - kubeadm upgrade plan
+  1. kubectl get nodes     controlplane,node01アリ
+  2. 最初にコントロールプレーンノードをアップグレードするために、コントロールプレーンノードからワークロードを排出し、スケジューリング不能にする。
+    - kubectl drain controlplane --ignore-daemonsets
+  3. コントロールプレーンをアップグレードする(kubeadmツールをアップグレードし,次にcontrolplaneコンポーネントをアップグレードし、最後にkubeletをアップグレードする。)
+    1. osを確認
+      - cat /etc/*release*
+    2. osに準拠してupdate
+      - apt update
+      - apt-cache madison kubeadm
+    3. コントロールプレーンをupdate
+      -  apt-mark unhold kubeadm && \
+         apt-get update && apt-get install -y kubeadm=1.27.0-00 && \
+         apt-mark hold kubeadm
+    4. kubeadmのversion確認
+      - kubeadm version
+    5. 今回のアップグレードで選択したパッチのバージョンに置き換える。
+      - sudo kubeadm upgrade apply v1.27.0
+      - apt-mark unhold kubelet kubectl &&\
+        apt-get update && apt-get install -y kubelet=1.27.0-00 kubectl=1.27.0-00 &&\
+        apt-mark hold kubelet kubectl
+    6. 再起動
+      - sudo systemctl daemon-reload
+      - sudo systemctl restart kubelet
+    7. ノードを復帰させる
+      - kubectl uncordon controlplane
+  4. node01をアップグレードする
+    1. 以下node01も切り離す
+      - kubectl drain node-1 --ignore-daemonsets
+    2. nodeのINTERNAL-IP取得,ログイン
+      - kubectl get nodes -o wide
+      - ssh 192.25.175.3
+    3. kubeadminをupgrade
+      -  apt-mark unhold kubeadm && \
+         apt-get update && apt-get install -y kubeadm=1.27.0-00 && \
+         apt-mark hold kubeadm
+      - sudo kubeadm upgrade node
+      - apt-mark unhold kubelet kubectl && \
+        apt-get update && apt-get install -y kubelet=1.27.0-00 kubectl=1.27.0-00 && \
+        apt-mark hold kubelet kubectl
+      - sudo systemctl daemon-reload
+      - sudo systemctl restart kubelet
+    4. ノードを復帰させる
+      - kubectl uncordon node01
