@@ -205,3 +205,37 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
       - sudo systemctl restart kubelet
     4. ノードを復帰させる
       - kubectl uncordon node01
+  - etcdのスナップショットを取りたい場合
+    - export ETCDCTL_API=3
+    - ETCDCTL_API=3 etcdctl --endpoints=https://[127.0.0.1]:2379 \
+      > --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+      > --cert=/etc/kubernetes/pki/etcd/server.crt \
+      > --key=/etc/kubernetes/pki/etcd/server.key \
+      > snapshot save /opt/snapshot-pre-boot.db
+    - snapshot save /opt/snapshot-pre-boot.db
+  - etcdはTLS-Enabledなので、以下のオプションは必須
+   - -cacert
+     - CAバンドルを使用するTLS対応セキュア・サーバーの証明書を検証する。
+   - -cert
+     - TLS証明書ファイルを使ってセキュアなクライアントを識別
+   - --endpoints=[127.0.0.1:2379]
+     - etcdがマスターノード上で動作しており、localhost 2379上で公開されているため、デフォルト
+   - --key
+     - TLSキーファイルを使用するセキュアなクライアントを識別
+  - スナップショットリストアのhelpオプション表示
+    - etcdctl snapshot restore -h
+  - アプリで使用しているetcdのversion
+    - kubectl get pods -n kube-system
+    - kubectl describe pod etcd-controlplane -n kube-system
+  - バックアップファイルを使ってクラスタの元の状態を復元
+    - ETCDCTL_API=3 etcdctl snapshot restore --data-dir <data-dir-location> snapshotdb
+    - /var/lib/etcd/ を/var/lib/etcd-from-backupにしているから
+    - cat /etc/kubernetes/manifests/etcd.yaml のvolumes:　hostPath:を修正する
+  - Stacked etcd topology
+    - スタック化されたコントロールプレーンノードの内部にそれぞれ etcd を配置してクラスターを構成
+  - External etcd topology
+    - コントロールプレーンの外部に etcd クラスターを構成
+  - デフォルトで作成される3つのNamespace
+    - default … Namespaceを持たないオブジェクトのデフォルトのNamespace
+    - kube-system … Kubernetesによって作成されたオブジェクトのためのなNamespace
+    - kube-public … 全ユーザーが読み込めるNamespace
