@@ -269,3 +269,64 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
     - openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout
 - `kube-api` serverに使用されている証明書ファイルを特定
   - cat でkube-apiのマニフェスト確認
+- 新しいメンバーがjoinして証明書署名があり、それを使用して、チームのクラスタにアクセスできるようにする手順
+  - Create a CertificateSigningRequest
+    - 中身kind: CertificateSigningRequestのyaml作成
+    - ディレクトリにあるakshay.csrを`cat akshay.csr | base64 -w 0`で生成したもおんをやyamlのrequestに入れる
+    - kubectl apply -f akshay.yaml
+  - 作成したcertificateの状態確認
+    - kubectl get csr
+  - まだpendingなので承認する
+    - kubectl certificate approve akshay
+  - csr拒否する
+    - kubectl certificate deny agent-smith
+  - 拒否したのを削除する
+    - kubectl delete csr agent-smith
+- 今までkubectlコマンドで認証情報を記載して叩いていたがそれは面倒なのでyamlで定義する。それがkubeConfig
+  - $HOME/.kube/configにconfigファイルを置いて認証されたpodをみる
+    - kubectl get pods
+  - kubeconfigの設定ファイル確認
+    - kubectl config view
+  - context変更
+    - kubectl config use-context　XXXXXX
+    - kubectl config use-context コンテキスト名 --kubeconfig コンフィグ名
+    - kubectl config use-context research --kubeconfig /root/my-kube-config
+  - role表示
+    - kubectl get roles
+    - kubectl describe role XXX
+  - rolebinding表示
+    - kubectl get rolebindings
+    - kubectl describe rolebinding XXX
+  - ユーザーに対して必要な権限作成
+    - kubectl create role developer --namespace=default --verb=list,create,delete --resource=pods
+    - kubectl create rolebinding dev-user-binding --namespace=default --role=developer --user=dev-user
+    - or
+```
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: default
+  name: developer
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["list", "create","delete"]
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: dev-user-binding
+subjects:
+- kind: User
+  name: dev-user
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: developer
+  apiGroup: rbac.authorization.k8s.io
+```
+  - role編集
+    - kubectl edit role ロール名 -n blue
+  -  指定のユーザーで実行
+    - --as dev-user
