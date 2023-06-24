@@ -241,7 +241,31 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
     - kube-public … 全ユーザーが読み込めるNamespace
 
 ## Security
-- サービスアカウントの作成
+- apiで認証情報ファイル付きでアクセス
+  - ExecStart=/usr/local/bin/kube-apiserver --base-auth-file=user-details.csv
+- kubeapiserverのyamlに認証情報加える
+  - /etc/kubernetes/manifests/kube-apiserver.yaml   のcommandの中に --base-auth-file=user-details.csvを加える
+- サービスアカウントの作成(CKADの内容)
   - kubectl create serviceaccount sa1
-- サービスアカウント取得
+- サービスアカウント取得(CKADの内容)
   - kubectl get serviceaccount
+- クラスタの証明書生成
+  - 証明書署名要求(お客様の詳細情報を全て記載記載した証明書)生成
+    - openssl genrsa -out ca.key 2048
+    - openssl req -new -key ca.key -subj "/CN=KUBERNETES-CA" -out ca.csr
+    - openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt
+  - 管理者ユーザーの証明書生成
+    - openssl genrsa -out admin.key 2048
+    - openssl req -new -key admin.key -subj "/CN=kube-admin/O=system:masters" -out admin.csr
+    - openssl x509 -req -in admin.csr -CA ca.crt -CAkey ca.key -out admin.crt
+  - apiserver証明書生成
+    - openssl genrsa -out apiserver.key 2048
+    - openssl req -new -key apiserver.key -sub "/CN=kube-apiserver" -out apiserver.csr
+    - openssl x509 -req -in apiserver.csr -CA ca.crt -CAkey ca.key -out apiserver.crt
+- クラスタ全体の全証明書のヘルスチェック
+  - cat /etc/kubernetest/manifests/kube-apiserver.service
+  - cat /etc/kubernetest/manifests/kube-apiserver.yaml
+  - 各証明書の中身確認(証明書の名前(CN Name)、別名(alt Names)、組織(organization)、発行者名(issuer)、有効期限(expiration))
+    - openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout
+- `kube-api` serverに使用されている証明書ファイルを特定
+  - cat でkube-apiのマニフェスト確認
