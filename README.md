@@ -239,3 +239,9 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
     - default … Namespaceを持たないオブジェクトのデフォルトのNamespace
     - kube-system … Kubernetesによって作成されたオブジェクトのためのなNamespace
     - kube-public … 全ユーザーが読み込めるNamespace
+
+## Security
+- サービスアカウントの作成
+  - kubectl create serviceaccount sa1
+- サービスアカウント取得
+  - kubectl get serviceaccount
