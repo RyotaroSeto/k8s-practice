@@ -330,3 +330,22 @@ roleRef:
     - kubectl edit role ロール名 -n blue
   -  指定のユーザーで実行
     - --as dev-user
+- nodeや永続volumeなどクラスタ全体のリソースに対して、ユーザ認可方法
+  - クラスタロールとクラスタロールバインディング使用
+  - クラスタロール
+    - クラスタ管理者にクラスタ内のノード表示、作成、削除を与えるクラスタ管理者ロールを作成できる
+    - ストレージ管理者のロールを作成して、ストレージ管理者に永続volumeとclaimを作成する権限を与えれる
+- サービスアカウント(CKAD)
+  - 認証、認可、ロールベースのアクセス制御などkubernetesの他のセキュリティ関連の概念と連携
+  - kubernetesにはユーザーアカウントとサービスアカウント、2種類のアカウントがある
+  - ユーザーアカウントは人間が使うもの
+  - サービスアカウントは機械が使うもの
+  - サービスアカウント作成
+    - kubectl create serviceaccount XXX
+  - サービスアカウント表示
+    - kubectl get serviceaccount
+    - kubectl describe serviceaccount XX
+  - secretトークンは/var/run/secret/kubernetes
+    - kubectl exec -it XXXX --ls /var/run/secret/kubernetes.io/serviceaccount
+- プライベートイメージ
+  - 既存のimageをprivateにしたい場合,nginx:alpine 　→ myprivateregistry.com:5000/nginx:alpine
