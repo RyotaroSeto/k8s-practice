@@ -349,3 +349,5 @@ roleRef:
     - kubectl exec -it XXXX --ls /var/run/secret/kubernetes.io/serviceaccount
 - プライベートイメージ
   - 既存のimageをprivateにしたい場合,nginx:alpine 　→ myprivateregistry.com:5000/nginx:alpine
+- podがどのユーザーで起動しているか確認するコマンド
+  - kubectl exec pod名 -- whoami

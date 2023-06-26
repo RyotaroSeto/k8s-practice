@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+spec:
+  # Podレベルで設定場合
+  securityContext:
+    runAsUser: 1000
+  containers:
+    - name: nginx-container
+      image: nginx
+      command: ["sleep", "3600"]
+      # コンテナレベルで設定場合
+      # securityContext:
+      #   runAsUser: 1000
