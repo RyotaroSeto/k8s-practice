@@ -351,3 +351,19 @@ roleRef:
   - 既存のimageをprivateにしたい場合,nginx:alpine 　→ myprivateregistry.com:5000/nginx:alpine
 - podがどのユーザーで起動しているか確認するコマンド
   - kubectl exec pod名 -- whoami
+- ネットワークポリシー
+  - 指定のpodからの何番portのみのアクセスのみ許可するなどの設定
+  - 具体的にはpodにlabelをつけ、ネットワークポリシーのportセレクタフィールドに同じlabelをつける
+  - Ingress(受信)
+    - 例.DBpodからAPIpodからの受信トラフィックを許可すること。
+    - podSelector
+      - ラベルでpodを選択する
+    - namespaceSelector
+      - ラベルで名前空間を選択する
+    - ipBlock
+      - IPアドレス範囲を選択する
+  - Egress(送信)
+    - 例.バックアップサーバーがバックアップを開始する代わりにdb-pod上のバックアップをバックアップサーバーにpushするエージェントがあるとする
+    - この場合、トラフィックはdb-podから外部のバックアップサーバー。
+  - ネットワークポリシー取得
+    - kubectl get networkpolicy
