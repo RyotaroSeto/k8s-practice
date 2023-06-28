@@ -367,3 +367,16 @@ roleRef:
     - この場合、トラフィックはdb-podから外部のバックアップサーバー。
   - ネットワークポリシー取得
     - kubectl get networkpolicy
+- Storage(永続volume)
+  - volume
+    - コンテナは削除作成が頻繁に行われるがコンテナ内のデータを永続化するためのもの
+  - Persistent Volume
+    - クラスタ上でアプリケーションを展開するユーザが使用できるように、管理者が設定したクラスタ全体のストレージボリュームのプール
+    - このプールから永続的なvolumeを指定してストレージを選択する
+    - kubectl get persistentvolume
+  - Persistent Volume Claim
+    - ユーザーによって要求されるストレージ。Podと似ていてPodはNodeリソースを消費し、PVCはPVリソースを消費。
+    - クレームは特定のサイズやアクセスモード(例えば、ReadWriteOnce、ReadOnlyMany、ReadWriteManyにマウントできる)
+    - kubectl get persistentvolumeclaim
+    - kubectl delete persistentvolumeclaim XXX
+  - pvとpvcのアクセスモードが一致しないと連携されない
