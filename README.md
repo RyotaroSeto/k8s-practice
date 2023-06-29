@@ -380,3 +380,20 @@ roleRef:
     - kubectl get persistentvolumeclaim
     - kubectl delete persistentvolumeclaim XXX
   - pvとpvcのアクセスモードが一致しないと連携されない
+- ネットワーク
+  - ip link(再起動したら消える)
+    - ホスト上のインターフェイスをリストアップし、変更すること。
+  - ip addr(再起動したら消える)
+    - インターフェイスに割り当てられているIPアドレスを確認すること
+  - ip addr add 192.168.XXXX dev eth0(再起動したら消える)
+    - インターフェイスにIPアドレスを設定するために使用
+  - cat /proc/sys/net/ipv4/ip_forward
+- DNS
+  - エントリ追加(IPアドレスに名前つける)       192.168.XXXX  db
+    - cat >> /etc/hosts
+  - 各　/etc/hostsにあったら増えたら一気に修正することが困難なため一元的に管理するため**DNSサーバー**が生まれた.
+  - 全てのhostをDNSサーバーの情報を参照する
+  - 全てのホストは/etc/resolv.confにDNS解決の設定ファイルを持っている
+    - cat /etc/resolv.conf
+  - ネットワーク・ネームスペースをテストしている間に、一方のネームスペースからもう一方のネームスペースにpingを送信できない問題が発生した場合IPアドレスを設定する際にNETMASKを設定。
+    - ip -n red addr add 192.168.1.10/24 dev veth-red
