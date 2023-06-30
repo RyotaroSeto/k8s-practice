@@ -409,3 +409,10 @@ roleRef:
     - ip route
   - どのportでlistenしているか調べる
     - netstat -npl
+- CNL Kubernetes
+  - kubeletを検査し、コンテナランタイムのエンドポイント値がKubernetes用に設定されていることを確認
+    - ps aux | grep kubelet | grep runtime
+  - kubernetesクラスタで使用するCNIプラグインはどのように設定されているか?
+    - ls /etc/cni/net.d
+  - weave
+    1. wget https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
