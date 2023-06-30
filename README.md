@@ -397,3 +397,15 @@ roleRef:
     - cat /etc/resolv.conf
   - ネットワーク・ネームスペースをテストしている間に、一方のネームスペースからもう一方のネームスペースにpingを送信できない問題が発生した場合IPアドレスを設定する際にNETMASKを設定。
     - ip -n red addr add 192.168.1.10/24 dev veth-red
+  - bridgeインターフェイスを表示
+    - ip address show type bridge
+  - bridgeインターフェイスのIPアドレスを設定
+    - ip addr add 10.244.1.1/24 dev XXX
+  - bridgeネットワーク作成
+    - ip link add XXXX type bridge
+  - bridgeネットワークset
+    - ip link set XXXX type bridge
+  - ip route調べる
+    - ip route
+  - どのportでlistenしているか調べる
+    - netstat -npl
