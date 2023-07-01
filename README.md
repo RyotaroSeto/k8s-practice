@@ -416,3 +416,12 @@ roleRef:
     - ls /etc/cni/net.d
   - weave
     1. wget https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
+  - 使用するプラングインの種類、サブネット、ルート表示
+    - cat /etc/cni/net.d/XXXX.conf
+- ClusterIP
+  - 特定のnodeに縛られることはないが、そのサービスにはクラスタ内からしかアクセスすることができないサービス
+- Serviceはpodとは異なり、各nodeで作成されたり、各nodeに割り割り当てられたりすることはない。serviceはクラスタ全体の概念
+- nodeのIPアドレス探し方
+  - ip addで特定のIPアドレスを持っているインターフェイスを探す。ここではeth0
+  - ipcalcツールを使ってネットワークの詳細を見る.ipcalc -b 192.3.8.255
+
