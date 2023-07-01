@@ -424,4 +424,13 @@ roleRef:
 - nodeのIPアドレス探し方
   - ip addで特定のIPアドレスを持っているインターフェイスを探す。ここではeth0
   - ipcalcツールを使ってネットワークの詳細を見る.ipcalc -b 192.3.8.255
-
+- CoreDNS
+  - kubernetesのDNS設定ファイル場所は、/etc/coredns
+  - コアファイルはconfig mapオブジェクトとしてpodに渡されるためkubectl get configmap -n kube-systemで表示
+- Ingress
+  - 以下のようにIngressを設定しなければならない。ユーザーが左のURLにアクセスすると、そのリクエストは内部的に右のURLに転送される
+    - `http://<ingress-service>:<ingress-port>/watch --> http://<watch-service>:<port>/`
+    - `http://<ingress-service>:<ingress-port>/wear --> http://<wear-service>:<port>/`
+  - rewrite-targetオプションがなければ、こうなる**重要**
+    - `http://<ingress-service>:<ingress-port>/watch --> http://<watch-service>:<port>/watch`
+    - `http://<ingress-service>:<ingress-port>/wear --> http://<wear-service>:<port>/wear`
