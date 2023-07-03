@@ -434,3 +434,10 @@ roleRef:
   - rewrite-targetオプションがなければ、こうなる**重要**
     - `http://<ingress-service>:<ingress-port>/watch --> http://<watch-service>:<port>/watch`
     - `http://<ingress-service>:<ingress-port>/wear --> http://<wear-service>:<port>/wear`
+  - 外部のロードバランサーを使用する場合はGKEとかEKS。
+  - 内部のロードバランサーを使用する場合、nginx-ingress-controllerをdeployしなければならない。構成は以下。上から順番
+    - LoadBalancer Service(ingress-endpoint)
+      - Deployment(nginx-ingress-controller)
+        - service(service-a) →　Deployment(service-a)
+        - service(service-b) →　Deployment(service-b)
+        - service(service-c) →　Deployment(service-c)
