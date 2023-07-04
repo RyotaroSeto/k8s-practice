@@ -441,3 +441,6 @@ roleRef:
         - service(service-a) →　Deployment(service-a)
         - service(service-b) →　Deployment(service-b)
         - service(service-c) →　Deployment(service-c)
+- HAモードでのetcd設定
+  - etcdはraftプロコトルを用いて分散コンセンサスを実装している
+  - HA環境の最小ノード数は３台である(多数決を採用しており、2台は1台と一緒のため。なので偶数は対象外)
