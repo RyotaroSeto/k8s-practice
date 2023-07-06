@@ -444,3 +444,18 @@ roleRef:
 - HAモードでのetcd設定
   - etcdはraftプロコトルを用いて分散コンセンサスを実装している
   - HA環境の最小ノード数は３台である(多数決を採用しており、2台は1台と一緒のため。なので偶数は対象外)
+- トラブルシューティング
+  - Webアプリケーションの場合
+    1. curlを使用してノードポートのIPでWebサーバーにアクセスできるか確認する。
+      - curl http://web-service-ip:node-por
+    2. serviceの確認
+      - web Podのエンドポイントを確認できるか
+      - kubectl describe service web-service
+      - エンドポイントが正しい場合は、サービスに設定されているセレクタとポッドに設定されているセレクタを比較する。必ず一致させること。
+    3. pod本体の確認
+      - 実行状態であることを確認
+      - get pod, describe pod, logs
+      - 失敗している場合ログを確認。kubectl logs web
+    4. DB serviceの状態確認
+      - セレクタ,service名の確認。podまたはdeploymentに記載されているDB_Host,DB_User,DB_Password:がserviceのものと合っているか
+    5. DB pod本体確認
