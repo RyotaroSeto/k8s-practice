@@ -451,7 +451,7 @@ roleRef:
     2. serviceの確認
       - web Podのエンドポイントを確認できるか
       - kubectl describe service web-service
-      - エンドポイントが正しい場合は、サービスに設定されているセレクタとポッドに設定されているセレクタを比較する。必ず一致させること。
+      - `エンドポイント``port`が正しい場合は、サービスに設定されているセレクタとポッドに設定されているセレクタを比較する。必ず一致させること。
     3. pod本体の確認
       - 実行状態であることを確認
       - get pod, describe pod, logs
@@ -459,3 +459,23 @@ roleRef:
     4. DB serviceの状態確認
       - セレクタ,service名の確認。podまたはdeploymentに記載されているDB_Host,DB_User,DB_Password:がserviceのものと合っているか
     5. DB pod本体確認
+  - コントロールプレーンの場合
+    1. kubectl get nodes でクラスタ内のノードの状態を確認する。
+    2. kubectl get pods でクラスタ上のポッドの状態を確認する。
+      - kubectl get pods -n kube-system
+      - kube-system内のpodに問題がある場合、`ls /etc/kubernetes/manifests/`内を修正.  edit pods　はできない。
+    3. kubeadmでデプロイされた場合、コントロールプレーンコンポーネントをポッドとしてdeployしていれば、kube-systemの名前空間でpodsが動作しているか確認
+    4. コントロールプレーンプレーンのコンポーネントがサービスとしてデプロイされている場合、
+      - service kube-apiserver status
+      - service kube-controller-manager status
+      - service kube-schduler status
+      - service kubelet status
+      - service kube-proxy status
+    5. それでも解決しない場合、コントロールプレーンのコンポーネントのログを確認
+      - kubectl logs kube-apiserver-master -n kube-system
+  - ワーカーノードの場合
+    1. kubectl get nodes でクラスタ内のノードの状態を確認する。
+      - もしおかしい場合describe node でnodeの状態確認
+      - 何も問題ない場合、nodeの中入る。ssh node01  確認するのはkubelet. service kubelet status  ノードのコントローラーのため。止まっている場合動かす。service kubelet start
+      - それでも治らない場合、journalctl -u kubelet でログ確認できる。ls /etc/kubernetes/manifests/ 周り確認し問題なかったら、 ls /var/lib/kubeletを確認.
+      - コントロールプレーンがおかしい場合,portが間違っている可能性あり。正しいportは6443 service kubelet restart
