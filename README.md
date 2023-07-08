@@ -479,3 +479,181 @@ roleRef:
       - 何も問題ない場合、nodeの中入る。ssh node01  確認するのはkubelet. service kubelet status  ノードのコントローラーのため。止まっている場合動かす。service kubelet start
       - それでも治らない場合、journalctl -u kubelet でログ確認できる。ls /etc/kubernetes/manifests/ 周り確認し問題なかったら、 ls /var/lib/kubeletを確認.
       - コントロールプレーンがおかしい場合,portが間違っている可能性あり。正しいportは6443 service kubelet restart
+- k8s JSON
+  - 下記のJSONでコンテナの順番は異なっても構わず、redisコンテナが常に2番目のコンテナである必要はない場合のredisコンテナのrestartCountを取得する`?(@)`が重要
+  - $.status.containerStatuses[?(@.name == 'redis-container')].restartCount
+```
+{
+  "apiVersion": "v1",
+  "kind": "Pod",
+  "metadata": {
+    "name": "nginx-pod",
+    "namespace": "default"
+  },
+  "spec": {
+    "containers": [
+      {
+        "image": "nginx:alpine",
+        "name": "nginx"
+      },
+      {
+        "image": "redis:alpine",
+        "name": "redis-container"
+      }
+    ],
+    "nodeName": "node01"
+  },
+  "status": {
+    "conditions": [
+      {
+        "lastProbeTime": null,
+        "lastTransitionTime": "2019-06-13T05:34:09Z",
+        "status": "True",
+        "type": "Initialized"
+      },
+      {
+        "lastProbeTime": null,
+        "lastTransitionTime": "2019-06-13T05:34:09Z",
+        "status": "True",
+        "type": "PodScheduled"
+      }
+    ],
+    "containerStatuses": [
+      {
+        "image": "nginx:alpine",
+        "name": "nginx",
+        "ready": false,
+        "restartCount": 4,
+        "state": {
+          "waiting": {
+            "reason": "ContainerCreating"
+          }
+        }
+      },
+      {
+        "image": "redis:alpine",
+        "name": "redis-container",
+        "ready": false,
+        "restartCount": 2,
+        "state": {
+          "waiting": {
+            "reason": "ContainerCreating"
+          }
+        }
+      }
+    ],
+    "hostIP": "172.17.0.75",
+    "phase": "Pending",
+    "qosClass": "BestEffort",
+    "startTime": "2019-06-13T05:34:09Z"
+  }
+}
+```
+  - 下記のJSONでコンテナで、すべてのポッド名を取得
+  - $[*].metadata.name
+```
+[
+  {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "web-pod-1",
+      "namespace": "default"
+    },
+    "spec": {
+      "containers": [
+        {
+          "image": "nginx:alpine",
+          "name": "nginx"
+        }
+      ],
+      "nodeName": "node01"
+    }
+  },
+  {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "web-pod-2",
+      "namespace": "default"
+    },
+    "spec": {
+      "containers": [
+        {
+          "image": "nginx:alpine",
+          "name": "nginx"
+        }
+      ],
+      "nodeName": "node02"
+    }
+  },
+  {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "web-pod-3",
+      "namespace": "default"
+    },
+    "spec": {
+      "containers": [
+        {
+          "image": "nginx:alpine",
+          "name": "nginx"
+        }
+      ],
+      "nodeName": "node01"
+    }
+  },
+  {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "web-pod-4",
+      "namespace": "default"
+    },
+    "spec": {
+      "containers": [
+        {
+          "image": "nginx:alpine",
+          "name": "nginx"
+        }
+      ],
+      "nodeName": "node01"
+    }
+  },
+  {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "db-pod-1",
+      "namespace": "default"
+    },
+    "spec": {
+      "containers": [
+        {
+          "image": "mysql",
+          "name": "mysql"
+        }
+      ],
+      "nodeName": "node01"
+    }
+  }
+]
+```
+- k8s JSON
+  - 下記の配列で以下のように取り出す場合
+```
+[
+  "car",
+  "bike"
+]
+```
+  - $[0,3]
+```
+[
+  "car",
+  "bus",
+  "truck",
+  "bike"
+]
+```
