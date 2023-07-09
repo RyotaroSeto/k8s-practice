@@ -657,3 +657,7 @@ roleRef:
   "bike"
 ]
 ```
+- ノードの形式をJSON形式でで取得して、指定のファイルに格納
+  - kubectl get nodes -o json > /opt/outputs/nodes.json
+- 指定のpath指定
+  - kubectl get nodes -o jsonpath="{.users[*].name}" > /opt/outputs/users.txt
