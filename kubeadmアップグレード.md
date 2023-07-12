@@ -21,5 +21,3 @@
     - systemctl restart kubelet
   - ノードを復帰させる
     - kubectl uncordon controlplane
-
-
