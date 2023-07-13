@@ -661,5 +661,3 @@ roleRef:
   - kubectl get nodes -o json > /opt/outputs/nodes.json
 - 指定のpath指定
   - kubectl get nodes -o jsonpath="{.users[*].name}" > /opt/outputs/users.txt
-- デプロイメントの更新(ローリングアップデート使用)
-  - kubectl set image deployment/nginx-deploy nginx=nginx:1.17
