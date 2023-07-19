@@ -6,3 +6,6 @@
 2. vi /etc/kubernetes/manifests/etcd.yamlでhostPath:をバックアップで復元したディレクトリを指定する。上でいう、/var/lib/etcd-from-backup
 
 https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/
+
+
+注意；/etc/kubernetes/manifests/etcd.yamlが/etc/systemd/system/etcd.serviceの時もある
