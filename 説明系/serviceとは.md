@@ -12,7 +12,7 @@ ports:
 - name: http
   port: 80
   targetPort: 8080
-  nodePort: 32742 ※NodePortの場合
+  nodePort: 32742 ※NodePort,LoadBalanceの場合必要
 ```
 - name : ポートの名前を指定する。DNS_LABEL に従っている必要があり、Service定義内でユニークである必要がある。また、1つ以上のポートを指定する場合 name が指定必須になる。
 - port : ServiceでExposeするポートを指定する。
