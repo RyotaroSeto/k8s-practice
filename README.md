@@ -1,52 +1,14 @@
-# k8sコマンド
-  - kubectl create -f pod-definition.yaml (createの代わりにapplyでもOK)
-- redisのpod(imageがredis123)のマニフェスト確認
-  - kubectl run redis --image=redis123 --dry-run -o yaml
-  - dry-run=client フラグを使用すると、実際に送信することなく、クラスターに送信されるオブジェクトを確認することができます。
-- redisのpod(imageがredis123)のマニフェスト作成
+# 重要コマンド
 kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
-- レプリケーションコントローラー確認
-  - kubectl get replicationController
-- レプリケーションコントローラー削除
-  - kubectl delete replicationController myapp-rc
-- レプリカセット確認
-  - kubectl get replicaset
-- レプリカセット削除
-  - kubectl delete replicaset myapp-replicaset
-- マニフェストのレプリカセットの数を変更した時更新
-  - kubectl replace -f replicaset-definition.yaml
 - コマンドでレプリカセットの数を変更したい時
   - kubectl scale --replicas=6 replicaset-definition.yaml(kubectl scale --replicas=6 replicaset myapp-replicaset)
-- デプロイメント確認
-  - kubectl get deployments
-- 作成されたもの全て確認
-  - kubectl get pods
-- 特定の名前とイメージを持つポッドやデプロイメントを作成するよう求められた場合
-  - kubectl run コマンド
-- deploymentのヘルプ
-  - kubectl create deployment --help
-- deployment作成
   - kubectl create deployment httpd-frontend --image=httpd:2.4-alpine --replicas=3
-- service
- - NodePort
- - ClusterIP
- - Loadbalancer
-   - クラウドプロバイダー(awsなど)のロードバランサーを使用して、Serviceを外部に公開します。クラスター外部にあるロードバランサーが転送する先のNodePortとClusterIP Serviceは自動的に作成されます。
- - serviceのClusterIPはKubernetesのクラスター外からはアクセスができない。serviceのNodePortを利用するとNodeの特定ポートにアクセスすれば、ClusterIPに繋げてくれる。
-- namespace表示
-  - kubectl get pods --namespace=kube-system
-- namespace作成
-  - kubectl create namespace dev
-  - kubectl apply -f namespace-definition.yaml
 - namespace付きpod作成
   - kubectl create -f pod-definition.yaml --namespace=dev
   - metadataの中にnamespace: devつける
 - podの中にある全てのnamespaceを見る
   - kubectl get pods --all-namespaces(kubectl get pods -A)
-- リソース定義をYAML形式で画面上に出力します。
-  - -o yaml
-  - kubectl run nginx --image=nginx --dry-run=client -o yaml
-  - kubectl create deployment nginx --image=nginx --dry-run=client -o yaml > nginx-deployment.yaml
+- kubectl create deployment nginx --image=nginx --dry-run=client -o yaml > nginx-deployment.yaml
 - NodePort タイプの nginx という名前の Service を作成して、ノード上のポート 30080 に pod nginx のポート 80 を公開
   - kubectl expose pod nginx --type=NodePort --port=80 --name=nginx-service --dry-run=client -o yaml
   - kubectl create service nodeport nginx --tcp=80:80 --node-port=30080 --dry-run=client -o yaml
@@ -60,10 +22,6 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
   - kubectl get pods --namespace kube-system　でスケジューラが見つかる`scheduler`と書いてある。なければpodがpendingのままの状態になる
 - label指定のget pods
   - kubectl get pods --selector name=myapp
-- ヘッダー抜きで指定のラベルのpodの数を表示
-  - kubectl get pods --selector env=dev --no-headers | wc -l
-- podやreplicasetなど全てのラベルの数を表示
-  - kubectl get all --selector env=prod --no-headers | wc -l
 - 複数ラベル指定
   - kubectl get all --selector env=prod,bu=finance,tier=frontend
 - アプリケーションbleuのpodにノードを専用にする key=value app=blue
@@ -84,11 +42,6 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
   - kubectl describe node controlplane | grep Taints # Taints <none>
 - 現状のpodをyamlに移してくれる
   - kubectl get pod elephant -o yaml > elephant.yaml
--  指定のネームスペースにあるデーモンセットの詳細確認
-  - kubectl get daemonsets -A # deamonsetの詳細確認
-  - kubectl describe daemonsets kube-proxy -n kube-system
-- DeamonSetはデプロイメントの特殊系
-- DaemonSetのユースケースとしては各Podが出すログを収集するFluentdや、各Podのリソース使用状況やノードの状態をモニタリングするDatadogなど全Node上で必ず動作している必要のあるプロセスのために利用
 - 静的pod定義ファイルを格納するディレクトリのパス
   - cat /var/lib/kubelet/config.yaml
 - kube-api serverの静的podとしてdeployするのに必要なDockerイメージはどのようなものか
@@ -100,10 +53,6 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
   - kubectl get events -o wide
 - namespaceにあるpodの詳細を見る時はnamespaceを指定する
   - kubectl describe pod kube-scheduler-controlplane -n kube-system
-- 各ノードのCPUとメモリの消費量を表示
-  - kubectl top node
-- podのパフォーマンスメトリクス
-  - kubectl top pod
 - podのログ表示
   - kubectl logs -f event-pod
 - podの中に複数コンテナがある場合のログ表示 podの後にコンテナ名もしていする　
@@ -178,7 +127,7 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
     2. nodeのINTERNAL-IP取得,ログイン
       - kubectl get nodes -o wide
       - ssh 192.25.175.3
-    3. kubeadminをupgrade
+    3. kubeadmをupgrade
       -  apt-mark unhold kubeadm && \
          apt-get update && apt-get install -y kubeadm=1.27.0-00 && \
          apt-mark hold kubeadm
@@ -320,18 +269,6 @@ roleRef:
   - クラスタロール
     - クラスタ管理者にクラスタ内のノード表示、作成、削除を与えるクラスタ管理者ロールを作成できる
     - ストレージ管理者のロールを作成して、ストレージ管理者に永続volumeとclaimを作成する権限を与えれる
-- サービスアカウント(CKAD)
-  - 認証、認可、ロールベースのアクセス制御などkubernetesの他のセキュリティ関連の概念と連携
-  - kubernetesにはユーザーアカウントとサービスアカウント、2種類のアカウントがある
-  - ユーザーアカウントは人間が使うもの
-  - サービスアカウントは機械が使うもの
-  - サービスアカウント作成
-    - kubectl create serviceaccount XXX
-  - サービスアカウント表示
-    - kubectl get serviceaccount
-    - kubectl describe serviceaccount XX
-  - secretトークンは/var/run/secret/kubernetes
-    - kubectl exec -it XXXX --ls /var/run/secret/kubernetes.io/serviceaccount
 - プライベートイメージ
   - 既存のimageをprivateにしたい場合,nginx:alpine 　→ myprivateregistry.com:5000/nginx:alpine
 - podがどのユーザーで起動しているか確認するコマンド
